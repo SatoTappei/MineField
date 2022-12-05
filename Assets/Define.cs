@@ -44,38 +44,6 @@ struct Layer
             for (int z = luZ; z <= rbZ; z++)
                 Masses[x, z] = m;
     }
-
-    /// <summary>パーリンノイズを用いて高さを設定する</summary>
-    public void SetHeightPN()
-    {
-        for (int x = 0; x < Width; x++)
-            for (int z = 0; z < Depth; z++)
-            {
-                float vx = (x+0.008f) / 9;
-                float vz = (z+0.008f) / 9;
-                float h = Mathf.PerlinNoise(vx, vz) * 10;
-
-                if (Mathf.RoundToInt(h) > 3)
-                {
-                    Masses[x, z].Height = 1;
-
-                    float vx2 = (x + 43.008f) / 9;
-                    float vz2 = (z + 43.008f) / 9;
-                    float h2 = Mathf.PerlinNoise(vx2, vz2) * 10;
-
-                    if (Mathf.RoundToInt(h2) > 6)
-                    {
-                        Masses[x, z].Height = -1000;
-                    }
-                }
-                else
-                {
-                    Masses[x, z].Height = -1000;
-                }
-
-                //Masses[x, z].Height = Mathf.RoundToInt(h);
-            }
-    }
 }
 
 /// <summary>
@@ -113,6 +81,12 @@ struct Terrain
                     target.Masses[x, z].Num = Utility.Empty;
             }
     }
+
+    /// <summary> パーリンノイズを用いて出した値を返す</summary>
+    /// <param name="power">小さいほど強いノイズになる</param>
+    /// <param name="range">小さいほど広範囲にノイズをかける</param>
+    public float PerlinNoise(float x, float z, float power, float range)
+        => Mathf.PerlinNoise((x + SeedX) / power, (z + SeedZ) / power) * range;
 }
 
 /// <summary>
@@ -122,4 +96,12 @@ static class Utility
 {
     /// <summary>そのマスに何も無いことを示す番号</summary>
     public const int Empty = 0;
+
+    /// <summary>a^2 + b^2 > c を満たすかを返す</summary>
+    public static bool CheckSqrt(float a, float b, float c)
+    {
+        float va = Mathf.Abs(a);
+        float vb = Mathf.Abs(b);
+        return va * va + vb * vb > c;
+    }
 }

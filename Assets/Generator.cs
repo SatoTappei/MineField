@@ -49,35 +49,23 @@ public class Generator : MonoBehaviour
 
         // 2つのパーリンノイズを組み合わせる
         // 円の半径にパーリンノイズの値をかけて滑らかにランダムにする
-        // TOOD:各構造体のクラスに格納できるかどうか検討する
         for(int x = 0; x < terrain.Width; x++)
-        {
             for (int z = 0; z < terrain.Depth; z++)
             {
-                int centerX = terrain.Width / 2-1;
-                int centerZ = terrain.Depth / 2-1;
+                float p1 = terrain.PerlinNoise(x, z, 10, 1.4f);
+                float p2 = terrain.PerlinNoise(x, z, 20, 1.3f);
 
-                float vx = (x + terrain.SeedX) / 10;
-                float vz = (z + terrain.SeedZ) / 10;
-                float p1 = Mathf.PerlinNoise(vx, vz) * 1.4f;
+                int centerX = terrain.Width / 2 - 1;
+                int centerZ = terrain.Depth / 2 - 1;
 
-                float vx2 = (x + terrain.SeedX) / 20;
-                float vz2 = (z + terrain.SeedZ) / 20;
-                float p2 = Mathf.PerlinNoise(vz2, vx2) * 1.3f;
-
-                if (Mathf.Abs(x - centerX) * Mathf.Abs(x - centerX) + Mathf.Abs(z - centerZ) * Mathf.Abs(z - centerZ) > 1900 * p1)
+                float rx = x - centerX;
+                float rz = z - centerZ;
+                if (Utility.CheckSqrt(rx, rz, 1900 * p1) && Utility.CheckSqrt(rx, rz, 2000 * p2))
                 {
-                    if (Mathf.Abs(x - centerX) * Mathf.Abs(x - centerX) + Mathf.Abs(z - centerZ) * Mathf.Abs(z - centerZ) > 2000 * p2)
-                    {
-                        terrain.land.Masses[x, z].Num = 0;
-                    }
+                    terrain.land.Masses[x, z].Num = 0;
                 }
             }
-        }
 
-        //terrain.land.SetHeightPN();
-        // 陸地の輪郭はパーリンノイズを使いたい
-        // 生成時には高さが決まっている必要がある = 数値の時点でパーリンノイズで高さ割り当てる
         // 陸地と重なっている海のマスを削除する
         terrain.EraseOverlap(terrain.sea, terrain.land);
 
@@ -114,45 +102,5 @@ public class Generator : MonoBehaviour
             }
 
         return gos;
-    }
-
-    /// <summary>二次元配列からブロックを生成して二次元配列として返す</summary>
-    GameObject[,] Generate(int[,] array)
-    {
-        int d = array.GetLength(0);
-        int w = array.GetLength(1);
-
-        GameObject[,] gos = new GameObject[d, w];
-
-        float seedX = Random.Range(0.0f, 100.0f);
-        float seedZ = Random.Range(0.0f, 100.0f);
-
-        for (int i = 0; i < d; i++)
-            for (int j = 0; j < w; j++)
-            {
-                if (_dic.TryGetValue(array[i, j],out Block value))
-                {
-                    float x = (i + seedX)/15;
-                    float z = (j + seedZ)/15;
-                    float h = Mathf.PerlinNoise(x, z) * 10;
-                    h = Mathf.Round(h);
-                    Vector3 pos = new Vector3(i, h, j);
-
-                    GameObject go = Instantiate(value.Go, pos, Quaternion.identity);
-
-                    gos[i, j] = go;
-                }
-                else
-                {
-                    Debug.LogError("登録されていません:" + array[i, j]);
-                }
-            }
-
-        return gos;
-    }
-
-    float GetPerline()
-    {
-        return 0;
     }
 }
