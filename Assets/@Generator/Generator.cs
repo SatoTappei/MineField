@@ -60,6 +60,8 @@ public class Generator : MonoBehaviour
 
                 float rx = x - centerX;
                 float rz = z - centerZ;
+
+                // 2つのパーリンノイズの範囲外にあるマスを消す
                 if (Utility.CheckSqrt(rx, rz, 1900 * p1) && Utility.CheckSqrt(rx, rz, 2000 * p2))
                 {
                     terrain.land.Masses[x, z].Num = 0;
