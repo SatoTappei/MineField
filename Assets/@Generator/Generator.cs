@@ -31,15 +31,6 @@ public class Generator : MonoBehaviour
 
     void Start()
     {
-        // 海に島を立てるイメージ
-
-
-        // 三層構造？にする
-        // 各マスの構造体の二次元配列がほしい
-        // 島には高低差があり、低いところには湖、高いところは山になる
-        // 植物を生やす
-        // 建物も立てたい
-
         // 100*100のサイズ
         Terrain terrain = new Terrain(100, 100, Random.Range(0.0f, 100.0f), Random.Range(0.0f, 100.0f));
         // 海レイヤーにサイズ分の海のマスを生成する
@@ -62,9 +53,18 @@ public class Generator : MonoBehaviour
                 float rz = z - centerZ;
 
                 // 2つのパーリンノイズの範囲外にあるマスを消す
-                if (Utility.CheckSqrt(rx, rz, 1900 * p1) && Utility.CheckSqrt(rx, rz, 2000 * p2))
+                if (Utility.CheckSqrt(rx, rz, 1900 * p1) && 
+                    Utility.CheckSqrt(rx, rz, 2000 * p2))
                 {
                     terrain.land.Masses[x, z].Num = 0;
+                }
+
+                // 一回り内側でも同じノイズで判定して砂浜を生成する
+                if (terrain.land.Masses[x, z].Num == 1   && 
+                    Utility.CheckSqrt(rx, rz, 1650 * p1) && 
+                    Utility.CheckSqrt(rx, rz, 1750 * p2))
+                {
+                    terrain.land.Masses[x, z].Num = 3;
                 }
             }
 
@@ -72,7 +72,7 @@ public class Generator : MonoBehaviour
         terrain.EraseOverlap(terrain.sea, terrain.land);
 
         // 生成する(仮)
-        Generate(terrain.sea.Masses);
+        //Generate(terrain.sea.Masses);
         Generate(terrain.land.Masses);
     }
 
@@ -95,7 +95,7 @@ public class Generator : MonoBehaviour
             {
                 if (_dic.TryGetValue(array[x, z].Num, out Block value))
                 {
-                    gos[x, z] = Instantiate(value.Go, new Vector3(x, array[x, z].Height, z), Quaternion.identity);
+                    gos[x, z] = Instantiate(value.Go, new Vector3(x, array[x, z].Height, z), Quaternion.identity, transform);
                 }
                 else
                 {

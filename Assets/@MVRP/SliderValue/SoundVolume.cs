@@ -6,7 +6,7 @@ using UniRx;
 /// <summary>
 /// 音量のデータの実体:Model
 /// </summary>
-public class Volume : MonoBehaviour
+public class SoundVolume : MonoBehaviour
 {
     public readonly int MaxValue = 100;
 
@@ -15,7 +15,7 @@ public class Volume : MonoBehaviour
     /// <summary>読み取り専用として外部に公開</summary>
     public IReadOnlyReactiveProperty<int> Value => _value;
 
-    public void SetCount(int value)
+    public void SetValue(int value)
     {
         // 最大音量はこのクラスが持っているのでここで補正をする？
         // Presenterには状態の保持をしたくない
