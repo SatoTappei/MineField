@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// 1マス
 /// </summary>
-struct Mass
+class Mass
 {
     public int Num { get; set; }
     public int Height { get; set; }
@@ -20,7 +20,7 @@ struct Mass
 /// <summary>
 /// 地形を構成する層
 /// </summary>
-struct Layer
+class Layer
 {
     public readonly int Width;
     public readonly int Depth;
@@ -38,24 +38,32 @@ struct Layer
     /// 指定した範囲に同じマスをセットする<br></br>
     /// 引数は配列の添え字で指定すること
     /// </summary>
-    public void SetMassRange(int luX, int luZ, int rbX, int rbZ, Mass m)
+    public void SetMassRange(int luX, int luZ, int rbX, int rbZ, int num, int height)
     {
         for (int x = luX; x <= rbX; x++)
             for (int z = luZ; z <= rbZ; z++)
-                Masses[x, z] = m;
+                Masses[x, z] = new Mass(num, height);
+    }
+
+    /// <summary>
+    /// 層をいくつかの区域に分けて管理するための構造体
+    /// </summary>
+    struct Area
+    {
+        // 未使用
     }
 }
 
 /// <summary>
 /// 地形全体
 /// </summary>
-struct Terrain
+class Terrain
 {
     public readonly int Width;
     public readonly int Depth;
 
-    public Layer sea;
-    public Layer land;
+    public Layer Sea;
+    public Layer Land;
 
     // ランダム生成のためのシード値
     public readonly float SeedX;
@@ -65,8 +73,8 @@ struct Terrain
     {
         Width = w;
         Depth = d;
-        sea = new Layer(w,d);
-        land = new Layer(w, d);
+        Sea = new Layer(w,d);
+        Land = new Layer(w, d);
         SeedX = sx;
         SeedZ = sz;
     }

@@ -174,6 +174,10 @@ MonoBehaviour:
     go: {fileID: 3566136881885113735, guid: 121789c60be0b9b4183122e5cb43a5ef, type: 3}
   - id: 3
     go: {fileID: 3395964295404170353, guid: 5c7e034333641db47b7dad451a1c75c3, type: 3}
+  - id: 50
+    go: {fileID: 211720533839030220, guid: 12214b9444754db48a51bc367b70fbb8, type: 3}
+  - id: 99
+    go: {fileID: 664107394484363853, guid: 005f11a15975b554b98de2fd13bde2ae, type: 3}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -400,7 +404,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8703226361050109389, guid: fb75165bb2919ed42bf30d423dba641c, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -0.01
       objectReference: {fileID: 0}
     - target: {fileID: 8703226361050109389, guid: fb75165bb2919ed42bf30d423dba641c, type: 3}
       propertyPath: m_LocalPosition.z
