@@ -40,26 +40,20 @@ public class Generator : MonoBehaviour
 
         // TOOD:Layer構造体の中にArea構造体を作ってそっちで管理することを留意する
         // 10*10の区域に分割するための座標のリストの二次元配列
-        List<(int x, int z)>[,] area = new List<(int x, int z)>[10, 10];
+        List<Mass>[,] area = new List<Mass>[10, 10];
         // 座標のリストの二次元配列を初期化
         for (int i = 0; i < 10; i++)
             for (int j = 0; j < 10; j++)
-                area[i, j] = new List<(int x, int z)>();
+                area[i, j] = new List<Mass>();
 
-        // ★TODO
-        // landを複製する
-        // 1段下にずらす
-        // 4方向にブロックがある場合は削除する
-        // 残ったブロックを海抜まで複製していく
-        //Layer dupe = new Layer(100, 100);
-        //dupe.SetMassRange(4, 4, 94, 94, new Mass(0, 0));
+        // 草のマスの"座標"のリスト
+        List<Mass> grassList = new List<Mass>();
 
         // 2つのパーリンノイズを組み合わせる
         // 円の半径にパーリンノイズの値をかけて滑らかにランダムにする
-        for(int x = 0; x < terrain.Width; x++)
+        for (int x = 0; x < terrain.Width; x++)
             for (int z = 0; z < terrain.Depth; z++)
             {
-                Debug.Log(terrain.Land.Masses[x, z].Num);
                 float p1 = terrain.PerlinNoise(x, z, 10, 1.4f);
                 float p2 = terrain.PerlinNoise(x, z, 20, 1.3f);
 
@@ -89,40 +83,59 @@ public class Generator : MonoBehaviour
                         float p3 = terrain.PerlinNoise(x, z, 20, 1);
                         // 高さ0だと海面と同じになってしまうので1以上にする
                         terrain.Land.Masses[x, z].Height = Mathf.Max(1, Mathf.FloorToInt(p3 * 5));
+
+                        // 後に操作するために草のマスのリストに追加する
+                        grassList.Add(terrain.Land.Masses[x, z]);
                     }
-
-
-                    // 周囲4マスを確認、砂浜もしくは海があればリストに追加
-                    //if (terrain.land.Masses[x - 1, z].Num != 1 ||
-                    //    terrain.land.Masses[x + 1, z].Num != 1 ||
-                    //    terrain.land.Masses[x, z - 1].Num != 1 ||
-                    //    terrain.land.Masses[x, z + 1].Num != 1)
-                    //{
-                    //    // 真下に生成 テスト
-                    //    dupe.Masses[x, z].Num = 99;
-                    //    dupe.Masses[x, z].Height = terrain.land.Masses[x, z].Height - 1;
-                    //}
-                    
-                    // 3回複製すればいい
                 }
-
                 // 座標のリストの二次元配列に追加
-                area[x / 10, z / 10].Add((x, z));
+                area[x / 10, z / 10].Add(terrain.Land.Masses[x, z]);
             }
 
-        // エリア単位で弄る
-        //foreach ((int x, int z) pair in area[9, 9])
+        // マスの高さを変えても見た目が欠けないように辺上のマスを壁付きに変更する
+        List<Mass> temp = new List<Mass>(grassList.Where(m => terrain.Land.Masses[m.X - 1, m.Z].Num != 1 ||
+                                                              terrain.Land.Masses[m.X + 1, m.Z].Num != 1 ||
+                                                              terrain.Land.Masses[m.X, m.Z - 1].Num != 1 ||
+                                                              terrain.Land.Masses[m.X, m.Z + 1].Num != 1));
+        temp.ForEach(m => terrain.Land.Masses[m.X, m.Z].Num = 50);
+
+        // ダイアモンドスクエアアルゴリズムと組み合わせる
+        // areaの全部のマスが緑のリスト
+
+        // 50,50が中心、座標が中心に近い順
+        foreach(Mass v in grassList)
+        {
+            //if (Mathf.Abs(50 - v.X) + Mathf.Abs(50 - v.Z) > 10) continue;
+            float p2 = terrain.PerlinNoise(v.X, v.Z, 20, 2f);
+            if (Utility.CheckSqrt(Mathf.Abs(50 - v.X), Mathf.Abs(50 - v.Z), 200 * p2)) continue;
+
+            //v.Height = (Mathf.Abs(50 - v.X) +  Mathf.Abs(50 - v.Z)) + v.Height;
+            v.Height += 20 - Mathf.Abs(50 - v.X) + 20 - Mathf.Abs(50 - v.Z);
+        }
+
+        //foreach (var v in area[6, 6])
         //{
-        //    terrain.land.Masses[pair.x, pair.z].Num = 99;
+        //    v.Num = 99;
+        //    v.Height = 5;
+        //}
+        //foreach (var v in area[5, 5])
+        //{
+        //    v.Num = 99;
+        //    v.Height = 5;
+        //}
+        //foreach (var v in area[4, 4])
+        //{
+        //    v.Num = 99;
+        //    v.Height = 5;
+        //}
+        //foreach (var v in area[3, 3])
+        //{
+        //    v.Num = 99;
+        //    v.Height = 5;
         //}
 
-        // 陸地と重なっている海のマスを削除する
-        //terrain.EraseOverlap(terrain.sea, terrain.land);
-
         // 生成する(仮)
-        //Generate(terrain.sea.Masses);
         Generate(terrain.Land.Masses);
-        //Generate(dupe.Masses);
     }
 
     void Update()

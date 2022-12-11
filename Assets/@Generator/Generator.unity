@@ -175,7 +175,7 @@ MonoBehaviour:
   - id: 3
     go: {fileID: 3395964295404170353, guid: 5c7e034333641db47b7dad451a1c75c3, type: 3}
   - id: 50
-    go: {fileID: 211720533839030220, guid: 12214b9444754db48a51bc367b70fbb8, type: 3}
+    go: {fileID: 211720533839030220, guid: 672f386e4b98ac446967bd6a7382c304, type: 3}
   - id: 99
     go: {fileID: 664107394484363853, guid: 005f11a15975b554b98de2fd13bde2ae, type: 3}
 --- !u!1 &705507993
@@ -441,6 +441,10 @@ PrefabInstance:
     - target: {fileID: 8703226361050109390, guid: fb75165bb2919ed42bf30d423dba641c, type: 3}
       propertyPath: m_Name
       value: OverlapSea
+      objectReference: {fileID: 0}
+    - target: {fileID: 8703226361050109390, guid: fb75165bb2919ed42bf30d423dba641c, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fb75165bb2919ed42bf30d423dba641c, type: 3}

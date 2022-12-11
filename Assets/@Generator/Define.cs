@@ -9,11 +9,15 @@ class Mass
 {
     public int Num { get; set; }
     public int Height { get; set; }
+    public int X { get; set; }
+    public int Z { get; set; }
 
-    public Mass(int n, int h)
+    public Mass(int n, int h, int x, int z)
     {
         Num = n;
         Height = h;
+        X = x;
+        Z = z;
     }
 }
 
@@ -42,8 +46,13 @@ class Layer
     {
         for (int x = luX; x <= rbX; x++)
             for (int z = luZ; z <= rbZ; z++)
-                Masses[x, z] = new Mass(num, height);
+                Masses[x, z] = new Mass(num, height, x, z);
     }
+
+    //public Layer Clone()
+    //{
+    //    return MemberwiseClone() as Layer;
+    //}
 
     /// <summary>
     /// ‘w‚ğ‚¢‚­‚Â‚©‚Ì‹æˆæ‚É•ª‚¯‚ÄŠÇ—‚·‚é‚½‚ß‚Ì\‘¢‘Ì
