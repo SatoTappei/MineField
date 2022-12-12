@@ -99,18 +99,22 @@ public class Generator : MonoBehaviour
                                                               terrain.Land.Masses[m.X, m.Z + 1].Num != 1));
         temp.ForEach(m => terrain.Land.Masses[m.X, m.Z].Num = 50);
 
-        // ダイアモンドスクエアアルゴリズムと組み合わせる
-        // areaの全部のマスが緑のリスト
+        // ランダムな箇所を森にする
+        int r1 = Random.Range(3, 8);
+        int r2 = Random.Range(3, 8);
+        // 上下左右
+        //int rx = (int)Mathf.Sign(Random.Range(-100, 100));
 
-        // 50,50が中心、座標が中心に近い順
-        foreach(Mass v in grassList)
+        terrain.Prop.SetMassRange(0, 0, terrain.Prop.Width - 1, terrain.Prop.Depth - 1, 0, 0);
+
+        foreach (var v in area[r1, r2])
         {
-            //if (Mathf.Abs(50 - v.X) + Mathf.Abs(50 - v.Z) > 10) continue;
-            float p2 = terrain.PerlinNoise(v.X, v.Z, 20, 2f);
-            if (Utility.CheckSqrt(Mathf.Abs(50 - v.X), Mathf.Abs(50 - v.Z), 200 * p2)) continue;
+            int x = terrain.Land.Masses[v.X, v.Z].X;
+            int z = terrain.Land.Masses[v.X, v.Z].Z;
 
-            //v.Height = (Mathf.Abs(50 - v.X) +  Mathf.Abs(50 - v.Z)) + v.Height;
-            v.Height += 20 - Mathf.Abs(50 - v.X) + 20 - Mathf.Abs(50 - v.Z);
+            terrain.Prop.SetMassRange(x, z, x, z, 11, terrain.Land.Masses[x, z].Height + 1);
+
+            
         }
 
         //foreach (var v in area[6, 6])
@@ -136,6 +140,7 @@ public class Generator : MonoBehaviour
 
         // 生成する(仮)
         Generate(terrain.Land.Masses);
+        Generate(terrain.Prop.Masses);
     }
 
     void Update()

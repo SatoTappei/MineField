@@ -73,6 +73,7 @@ class Terrain
 
     public Layer Sea;
     public Layer Land;
+    public Layer Prop;
 
     // ランダム生成のためのシード値
     public readonly float SeedX;
@@ -84,6 +85,7 @@ class Terrain
         Depth = d;
         Sea = new Layer(w,d);
         Land = new Layer(w, d);
+        Prop = new Layer(w, d);
         SeedX = sx;
         SeedZ = sz;
     }
