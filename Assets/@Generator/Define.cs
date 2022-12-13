@@ -22,6 +22,21 @@ class Mass
 }
 
 /// <summary>
+/// 層をいくつかの区域に分けて管理するためのクラス
+/// </summary>
+class Area
+{
+    public List<Mass> List { get; set; }
+    public bool IsBuilding { get; set; }
+
+    public Area()
+    {
+        List = new List<Mass>();
+        IsBuilding = false;
+    }
+}
+
+/// <summary>
 /// 地形を構成する層
 /// </summary>
 class Layer
@@ -42,10 +57,10 @@ class Layer
     /// 指定した範囲に同じマスをセットする<br></br>
     /// 引数は配列の添え字で指定すること
     /// </summary>
-    public void SetMassRange(int luX, int luZ, int rbX, int rbZ, int num, int height)
+    public void Init(int num, int height)
     {
-        for (int x = luX; x <= rbX; x++)
-            for (int z = luZ; z <= rbZ; z++)
+        for (int x = 0; x < Width; x++)
+            for (int z = 0; z < Depth; z++)
                 Masses[x, z] = new Mass(num, height, x, z);
     }
 
@@ -53,14 +68,6 @@ class Layer
     //{
     //    return MemberwiseClone() as Layer;
     //}
-
-    /// <summary>
-    /// 層をいくつかの区域に分けて管理するための構造体
-    /// </summary>
-    struct Area
-    {
-        // 未使用
-    }
 }
 
 /// <summary>
@@ -96,8 +103,8 @@ class Terrain
         for (int x = 0; x < overlap.Width; x++)
             for (int z = 0; z < overlap.Depth; z++)
             {
-                if (overlap.Masses[x, z].Num != Utility.Empty)
-                    target.Masses[x, z].Num = Utility.Empty;
+                if (overlap.Masses[x, z].Num != Generator.Empty)
+                    target.Masses[x, z].Num = Generator.Empty;
             }
     }
 
@@ -106,21 +113,4 @@ class Terrain
     /// <param name="range">小さいほど広範囲にノイズをかける</param>
     public float PerlinNoise(float x, float z, float power, float range)
         => Mathf.PerlinNoise((x + SeedX) / power, (z + SeedZ) / power) * range;
-}
-
-/// <summary>
-/// 便利クラス
-/// </summary>
-static class Utility
-{
-    /// <summary>そのマスに何も無いことを示す番号</summary>
-    public const int Empty = 0;
-
-    /// <summary>a^2 + b^2 > c を満たすかを返す</summary>
-    public static bool CheckSqrt(float a, float b, float c)
-    {
-        float va = Mathf.Abs(a);
-        float vb = Mathf.Abs(b);
-        return va * va + vb * vb > c;
-    }
 }

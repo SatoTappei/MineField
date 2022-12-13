@@ -167,6 +167,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3370092f0d3357c4391a915093035e5e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _terrainSize: 100
+  _p1Power: 10
+  _p1Range: 1.4
+  _p2Power: 20
+  _p2Range: 1.3
+  _p1Border: 1900
+  _p2Border: 2000
+  _beachWidth: 150
+  _beachWoods: 5
+  _forestWoods: 5
+  _p3Power: 20
+  _p3Range: 1
   _blocks:
   - id: 1
     go: {fileID: 211720533839030220, guid: 0df46e3e0b241ec45bf7078f602afc48, type: 3}
@@ -178,6 +190,16 @@ MonoBehaviour:
     go: {fileID: 6005673182165973262, guid: 9064ee79dcb19834a8425581ac278e4f, type: 3}
   - id: 12
     go: {fileID: 6890907965632655566, guid: 629eb3f60bdf9434cacfb0faa1023a5d, type: 3}
+  - id: 21
+    go: {fileID: 6311098464713094623, guid: 17175d60b8bbd0d419a0e1ef05ee4736, type: 3}
+  - id: 22
+    go: {fileID: 4828778182425432252, guid: ffa118a3528e5b5429afab77709886b1, type: 3}
+  - id: 23
+    go: {fileID: 7248962333813850867, guid: a5524eb611c4e8e489a12ac6042b3a9e, type: 3}
+  - id: 24
+    go: {fileID: 6512451372493060179, guid: efef0fae513732c40ab7032dc1de5d28, type: 3}
+  - id: 25
+    go: {fileID: 5923314128320652996, guid: 946a02ba241c96d49a84029d4e725e50, type: 3}
   - id: 50
     go: {fileID: 211720533839030220, guid: 672f386e4b98ac446967bd6a7382c304, type: 3}
   - id: 99
